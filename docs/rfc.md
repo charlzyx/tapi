@@ -8,177 +8,176 @@ outline: deep
 
 tApi 旨在使用受限制的 TypeScript 语法与约定文件结构, 来描述 Api 请求的完整形态;
 
-## 举个例子
+### 数据类型的定义
 
-文件结构 PetSotre
+使用 `class` 关键字来定义可复用实体类;
 
-```sh
-├── Pet
-│   ├── createPet.ts
-│   ├── deletePet.ts
-│   ├── findPetById.ts
-│   ├── findPetByStatus.ts
-│   ├── findPetByTags.ts
-│   ├── updatePet.ts
-│   ├── updatePetWithForm.ts
-│   └── uploadPetImage.ts
-├── Store
-│   ├── deleteOrder.ts
-│   ├── getInventory.ts
-│   ├── getOrderById.ts
-│   └── placeOrder.ts
-├── User
-│   ├── createUser.ts
-│   ├── createUserWithList.ts
-│   ├── deleteUser.ts
-│   ├── getUserByName.ts
-│   ├── login.ts
-│   ├── logout.ts
-│   └── updateUser.ts
-├── builtins.d.ts
-├── defs.d.ts
-└── meta.d.ts
-```
+显然，相比于 `JSON Schema`, ts 的语法更加简洁易读， 语义明确, 类型的定义和复用轻而易举;
 
-`/User/getUserByName.ts`
+> 在 OpenAPI Spec 3.0 中， 用于类型定义的 [Schema Object](https://swagger.io/specification/v3/) 使用的使 JSON Schema Spec 的一个子集
+
+特别的，充分利用 ts 的语法优势， 我们使用
+
+- 内置 `int64/int32` 等内置的类型别名来简化基础类型变体
+- 使用 JSDoc 来实现对 `JSON Schema` 属性的完整支持
+- 使用 `?` 来表示是否 `required`
+- 使用 `=` 赋值语句来表示默认值 `default`
+- 使用 `联合字面量类型` 表示 `enum`, 它可以很容易的复用！
 
 ```ts
-export type get = {
-  url: "{{SERVER}}/user/:username";
-  path: {
-    username: User["username"];
-  };
-  resp:
-    | Resp<User>
-    | Resp<User, "application/xml">
-    | Reason<"INvalid username supplied">
-    | Reason<"User not found", 404>;
-};
-```
-
-### `builtins.d.ts` 内置的类型
-
-提供了一些基础的类型转换和常用的辅助类型; 下列类型转换用于简化 类似 OpenApi 所支持的原始类型;
-通常情况下, 这里作为基础支持, 不需要改动
-
-```ts
-type int32 = number;
-type int64 = number;
-type float = number;
-type double = number;
-type date = string;
-type datetime = string;
-type password = string;
-type binary = string;
-type byte = string;
-```
-
-辅助类型不是必须的, 存在目的更多是为了简化编写
-
-### `meta.d.ts` 自定义辅助类型
-
-在这里, 你可以定义自己的包含泛型的 `请求/响应` 通用类型定义, 并不限制类型多少, `APT` 将会尽可能的满足你的自定义推断
-
-### `defs.d.ts` 实体类定义
-
-在这里, 你可以使用 `class` 关键字来定义实体内容, `enum`类型暂时提供 Union Type 支持;
-
-类型的互相引用则可以使用 `TypeScript` 类型定义支持;
-
-因为是 `d.ts` 文件, 所以基础类型会作为全局导入
-
-1. 属性注释: 支持 jsDoc `/** @title 就像这样 */` 当然, 多行也是支持的
-
-```ts
-/**
- * @title nameof property
- * @tableName tabel_name
- */
-```
-
-单行的 `// 注释` 也是可以的, 包含
-
-```ts
-{
-  // 上一行的注释
-  name: string; // 和末尾的注释
-}
-```
-
-?? 突发 TODO: @tableName("装饰器用起来怎么样")
-
-显然, 这里还没有明确的规范
-
-2. 枚举的支持: 暂时对 `Union String` 做一下支持, `enum` 的支持在考虑中, 主要是, `openapi` 规范与 `ts` 的 `enum` 表现需要增加限制来保持一致性
-
-```ts
-// 参考: https://editor-next.swagger.io/
-type Status = "placed" | "approved" | "delivered";
-
 class Order {
   id: int64;
   petId: int64;
+  /**
+   * @title quantity of pets
+   * @maximum 10
+   * @minimum 0
+   **/
   quantity: int32;
-  shipDate: datetime;
   status: Status;
   complete: boolean;
 }
 
 class Pet {
-  /** Pet's id */
+  /** @title 唯一标志 */
   id: int64 = 0;
-  // getJsDocs() cannot see me
-  category: Category; // but getLeadingCommentRanges/getTrailingCommentRanges can do it!
-  // name with default
+  category: Category;
   name: string = "hi";
-  /** photos */
   photoUrls: string[];
   tags: Tag[];
   status: Status;
 }
+
+type Status = "placed" | "approved" | "delivered";
 ```
 
 ### 接口的定义
 
-1. 请求方法: `export type [请求方法]` 根据 type 的别名(alias) 表示请求方法
-   > delete 因为是关键字, 使用 del 代替
-2. 请求路径: `url`字段指定请求路径, 路径中的参数使用 `:pathParms` 来表述
-   > 查询参数 `?a=1` 不在这里表示
-3. 请求参数/路径参数`path`: 这是一个冗余的信息, 用来语义化的表名参数的含义;
-4. 请求参数/查询参数`query`: 查询参数类型
-   > 根据 http 协议约定, 这里只支持简单值类型和简单值类型所组成的数组
-5. 请求参数/请求头`headers`: 请求头的定义
-   > 这里只支持简单值类型和简单值类型所组成的数组
-6. 请求参数/请求`Cookie`: 请求 Cookie 内容
-   > 这里只支持简单值类型和简单值类型所组成的数组
-7. 响应值类型`resp`: 这里就开始复杂起来了, 通常情况下, 我们将要用到 `Resp` 和 `Reason` 包装器来表示不同的响应值了;
-
-在当前例子中, 正常响应的数据类型与默认值含义如下: `Resp<数据类型, ContentType = 'application/json', HttpStatusCode = 200, ResponseHeaders = {}>`,
-
-错误处理的类型含义与默认值: `Reason<原因描述, HttpStatusCode = 200, ResponseHeaders = {}>`
+先举个 🌰
 
 ```ts
-export type get = {
-  url: "{{SERVER}}/user/:pathParam";
-  path: {
-    pathParams: User["id"];
-  };
-  query: {
-    name?: User["name"];
-    tags?: string[];
-  };
+export type searchUserList = {
+  method: "GET";
+  url: "{{SERVER}}/searchby/:namelike";
   headers: {
-    "X-Token": string;
+    "x-token": Auth["token"];
   };
-  cookie: {
-    username: string;
+  cookies: {
+    uid: string;
+  };
+  path: {
+    namelike: User["name"];
+  };
+  query: PageQuery<{ name: string }>;
+  body: {
+    skip: number;
   };
   resp:
-    | Resp<User>
-    | Resp<User, "application/xml">
-    | Reason<"INvalid username supplied">
+    | Resp<PageResp<User>>
+    | Resp<PageResp<User>, "application/xml">
+    | Reason<"namelike MUST NOT be empty">
     | Reason<"User not found", 404>;
 };
 ```
 
-## 最终转换输出标准 json 定义
+:::details 类型详情
+
+```ts
+type PageQuery<T> = T & {
+  pageNo: number;
+  pageSize: number;
+};
+
+type PageResp<T> = {
+  records: T[];
+  total: number;
+  pageNo?: number;
+  pageSize?: number;
+};
+
+type Resp<
+  T,
+  ContentType extends BuiltInContentType = "application/json",
+  HTTPStateCode = 200,
+  Headers extends Partial<Record<BuiltInHttpHeaders, string>> = {}
+> = {
+  code: int32;
+  data: T;
+  message: string;
+};
+
+type Reason<
+  T,
+  HTTPStateCode = 400,
+  Headers extends Partial<Record<BuiltInHttpHeaders, string>> = {}
+> = {
+  code: int32;
+  reason: string;
+};
+```
+
+:::
+
+| 定义                 | 语法 \|属性名               | 例子                                   |
+| -------------------- | --------------------------- | -------------------------------------- |
+| 操作唯一标识         | `export type [OperationID]` | `export type getUser`                  |
+| 请求方法             | `method`                    | `"GET"`                                |
+| 请求地址             | `url`                       | `{{SERVER}}/getby/:id`                 |
+| 请求头               | `headers`                   | `{ "x-token": string }`                |
+| 请求 Cookies         | `cookies`                   | `{ "uid": string }`                    |
+| 路径参数 PathParams  | `path`                      | `{ id: User['id']}`                    |
+| 请求参数 QueryParams | `query`                     | `{ id: User['id']}`                    |
+| 请求体 RequestBody   | `body`                      | `User`                                 |
+| 响应值 Response      | `resp`                      | `Resp<User>\| Reason<"NotFound", 404>` |
+
+如你所见 任何定义类型部分都可以使用
+
+`字面量` -\> `字面量对象` 语法 \-> 类型引用 -\> 泛型表示
+
+这样复杂的语法来充分发挥 ts 优异的表现力!
+
+```ts
+Resp<
+  数据类型,
+  ContentType = 'application/json',
+  HttpStatusCode = 200,
+  ResponseHeaders = {}
+>
+
+Reason<
+  原因描述,
+  HttpStatusCode = 200,
+  ResponseHeaders = {}
+>
+
+```
+
+## 最终转换输出标准 JSON 对象
+
+TODO
+
+### 附录
+
+> OpenAPI 核心定义 伪类型 以 [v3.0](https://swagger.io/specification/v3/)为例
+
+```ts
+type Schema = {
+  paths: PathsObject;
+};
+type PathsObject = {
+  [`/{path}`]: PathItemObject;
+};
+
+type PathItemObejct = {
+  get?: OperationObject;
+  get?: OperationObject;
+  // ...
+};
+
+type OperationObject = {
+  parameters: ParameterObject | ReferenceObject;
+  requestBody: RequestBody | ReferenceObject;
+  responses: ResponseObject;
+};
+// ...
+```
