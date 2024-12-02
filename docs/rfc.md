@@ -6,9 +6,9 @@ outline: deep
 
 ## 简介
 
-tApi 旨在使用受限制的 TypeScript 语法与约定文件结构, 来描述 Api 请求的完整形态;
+tApi 旨在使用受限制的 TypeScript 语法, 来描述 Api 请求的数据结构;
 
-### 数据类型的定义
+## 数据类型的定义
 
 使用 `class` 关键字来定义可复用实体类;
 
@@ -18,11 +18,11 @@ tApi 旨在使用受限制的 TypeScript 语法与约定文件结构, 来描述 
 
 特别的，充分利用 ts 的语法优势， 我们使用
 
-- 内置 `int64/int32` 等内置的类型别名来简化基础类型变体
-- 使用 JSDoc 来实现对 `JSON Schema` 属性的完整支持
-- 使用 `?` 来表示是否 `required`
-- 使用 `=` 赋值语句来表示默认值 `default`
-- 使用 `联合字面量类型` 表示 `enum`, 它可以很容易的复用！
+- 使用 `int64`、`int32` 等内置类型别名，简化基础类型变体；
+- 借助 JSDoc 支持 `JSON Schema` 属性的完整定义；
+- 用 `?` 表示字段是否为 `required`；
+- 用 `=` 赋值语句定义默认值 (`default`)；
+- 用联合字面量类型 (`union literal types`) 表示 `enum`，从而轻松实现复用。
 
 ```ts
 class Order {
@@ -51,9 +51,14 @@ class Pet {
 type Status = "placed" | "approved" | "delivered";
 ```
 
-### 接口的定义
+## 接口的定义
 
-先举个 🌰
+先举个 🌰， 在这个例子中， 我们会用到以下语法来表示一个请求操作
+
+- 字面量 (Literal)
+- 字面量对象 (Object Literal)
+- 类型引用 (Type Reference)
+- 泛型表示法 (Generic)
 
 ```ts
 export type searchUserList = {
@@ -80,7 +85,7 @@ export type searchUserList = {
 };
 ```
 
-:::details 类型详情
+:::details 泛型定义
 
 ```ts
 type PageQuery<T> = T & {
@@ -96,18 +101,18 @@ type PageResp<T> = {
 };
 
 type Resp<
-  T,
+  数据类型,
   ContentType extends BuiltInContentType = "application/json",
   HTTPStateCode = 200,
   Headers extends Partial<Record<BuiltInHttpHeaders, string>> = {}
 > = {
   code: int32;
-  data: T;
+  data: 数据类型;
   message: string;
 };
 
 type Reason<
-  T,
+  原因描述,
   HTTPStateCode = 400,
   Headers extends Partial<Record<BuiltInHttpHeaders, string>> = {}
 > = {
@@ -118,43 +123,21 @@ type Reason<
 
 :::
 
-| 定义                 | 语法 \|属性名               | 例子                                   |
-| -------------------- | --------------------------- | -------------------------------------- |
-| 操作唯一标识         | `export type [OperationID]` | `export type getUser`                  |
-| 请求方法             | `method`                    | `"GET"`                                |
-| 请求地址             | `url`                       | `{{SERVER}}/getby/:id`                 |
-| 请求头               | `headers`                   | `{ "x-token": string }`                |
-| 请求 Cookies         | `cookies`                   | `{ "uid": string }`                    |
-| 路径参数 PathParams  | `path`                      | `{ id: User['id']}`                    |
-| 请求参数 QueryParams | `query`                     | `{ id: User['id']}`                    |
-| 请求体 RequestBody   | `body`                      | `User`                                 |
-| 响应值 Response      | `resp`                      | `Resp<User>\| Reason<"NotFound", 404>` |
-
-如你所见 任何定义类型部分都可以使用
-
-`字面量` -\> `字面量对象` 语法 \-> 类型引用 -\> 泛型表示
-
-这样复杂的语法来充分发挥 ts 优异的表现力!
-
-```ts
-Resp<
-  数据类型,
-  ContentType = 'application/json',
-  HttpStatusCode = 200,
-  ResponseHeaders = {}
->
-
-Reason<
-  原因描述,
-  HttpStatusCode = 200,
-  ResponseHeaders = {}
->
-
-```
+| 定义                        | 属名                    | 说明                                                        |
+| --------------------------- | ----------------------- | ----------------------------------------------------------- |
+| `export type [OperationID]` | -唯一标识 / OperationID | 请保证全局唯一                                              |
+| method                      | -请求方法 / Method      | `GET\|POST\|PUT\|OPTION\|HEAD\|TRACE`                       |
+| url                         | -请求地址 / Url         | 支持 `{{变量}}` 与`/getby/:id` 路径参数表示法               |
+| headers                     | -请求头 / Headers       | 根据 HTTP 标准，`Key` 值大小写不敏感                        |
+| cookies                     | -请求 / Cookies         | 根据标准 TODO                                               |
+| path                        | -路径参数 / PathParams  | 路径参数，只有字符串类型，这是一个补充， 更多是为了表明语义 |
+| query                       | -请求参数 / QueryParams | 类型限制参考 qs                                             |
+| body                        | -请求体 / RequestBody   | 比较自由， 二进制 TODO                                      |
+| resp                        | -响应值 / Response      | 支持多中类型联合类型                                        |
 
 ## 最终转换输出标准 JSON 对象
 
-TODO
+TODO：具体转换细节待补充。
 
 ### 附录
 
