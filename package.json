@@ -1,0 +1,33 @@
+{
+  "author": "",
+  "bin": "bin/index.js",
+  "bugs": {
+    "url": "https://github.com/charlzyx/tapi/issues"
+  },
+  "dependencies": {
+    "@types/node": "^20",
+    "ts-morph": "^24.0.0",
+    "typescript": "^5.6.3"
+  },
+  "description": "Api TypeScript Description.",
+  "devDependencies": {
+    "vitepress": "^1.5.0"
+  },
+  "homepage": "https://github.com/charlzyx/tapi#readme",
+  "keywords": [],
+  "license": "ISC",
+  "name": "tapi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlzyx/tapi.git"
+  },
+  "scripts": {
+    "docs:build": "vitepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/*"
+  ]
+}

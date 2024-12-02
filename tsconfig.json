@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "baseUrl": ".",
+    "paths": {
+      "@tapi/*": ["packages/*"]
+    }
+  },
+
+}
