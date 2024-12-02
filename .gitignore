@@ -2,5 +2,4 @@
 node_modules/
 bun.lockb
 .vitepress/cache
-docs/.vitepress/dist
 ret.json
