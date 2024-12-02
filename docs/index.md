@@ -14,6 +14,6 @@ hero:
 features:
   - title: TypeScript 语法定义 API
     details: 语法简洁, 语义明确, 表现力强大
-  - title: `.ts` 纯文本存储
+  - title: .ts 纯文本存储
     details: 完全离线工作模式, 方便集成到 Git 中管理
 ---
