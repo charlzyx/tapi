@@ -5,12 +5,8 @@ type PageQuery<T> = T & {
   pageSize: number;
 };
 
-// 分页配置
-// 的包装器
 type PageResp<T> = {
-  /** 数组值 */
   records: T[];
-  // 你好
   total: number;
   pageNo?: number;
   pageSize?: number;

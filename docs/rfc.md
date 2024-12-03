@@ -10,7 +10,7 @@ tApi 旨在使用受限制的 TypeScript 语法, 来描述 Api 请求的数据�
 
 ## 数据类型的定义
 
-使用 `class` 关键字来定义可复用实体类;
+在 `d.ts` 文件中使用 `class` 关键字来定义可复用实体类;
 
 显然，相比于 `JSON Schema`, ts 的语法更加简洁易读， 语义明确, 类型的定义和复用轻而易举;
 
@@ -51,7 +51,9 @@ class Pet {
 type Status = "placed" | "approved" | "delivered";
 ```
 
-## 接口的定义
+## 接口操作的定义
+
+在 `ts` 文件中, 使用 type 来定义接口类型; 当 `type operation = { url: 'URL' }` 满足这样的形式, 就认为是一个接口操作定义
 
 先举个 🌰， 在这个例子中， 我们会用到以下语法来表示一个请求操作
 
