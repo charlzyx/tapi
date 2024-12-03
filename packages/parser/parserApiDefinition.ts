@@ -86,7 +86,7 @@ const resolveType = (
       const after = node.getTrailingCommentRanges();
       const blines = before.map((item) => item.getText());
       const alines = after.map((item) => item.getText());
-      console.log({ alines, blines });
+      // console.log({ alines, blines });
 
       const jsDocs = node?.getJsDocs().map((jsDoc) => {
         const txt = jsDoc.getText();

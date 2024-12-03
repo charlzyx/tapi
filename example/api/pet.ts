@@ -4,6 +4,7 @@ type createPet = {
   resp: Resp<Pet> | Resp<Pet, "application/xml">;
 };
 
+// @deprecated in line
 type deletePet = {
   method: "DELETE";
   url: "{{SERVER}}/pet/:petId";
@@ -16,6 +17,9 @@ type deletePet = {
   resp: Reason<"Invalid pet value">;
 };
 
+/**
+ * @deprecated in js doc
+ */
 type findPetByID = {
   method: "GET";
   url: "{{SERVER}}/:petId";
@@ -87,4 +91,16 @@ type updatePetImage = {
   body: binary;
   query: Record<string, string>;
   resp: Resp<Pet> | Reason<"Pet not Found", 404>;
+};
+
+// @ignore must be last line of type alias declear block
+type cannotseeme = {
+  url: "hide in bash";
+};
+
+/**
+ * @ignore in js Doc
+ */
+type cannotseemetoo = {
+  url: "hide in bash";
 };

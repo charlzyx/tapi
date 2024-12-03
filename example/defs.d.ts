@@ -56,3 +56,9 @@ class Pet {
   tags: Tag[];
   status: Status;
 }
+
+@ignore
+class Cannot {
+  see: "ME";
+  caseBy: "@ignore";
+}
