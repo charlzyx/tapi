@@ -1,9 +1,12 @@
-import { defineConfig } from "vitepress";
+import { defineConfigWithTheme } from "vitepress";
+import type { ThemeConfig } from "vitepress-carbon";
+import baseConfig from "vitepress-carbon/config";
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default defineConfigWithTheme<ThemeConfig>({
+  extends: baseConfig,
   title: "tApi",
-  srcDir: "./docs",
+  // srcDir: "./docs",
   description: "typed application programming interface",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config

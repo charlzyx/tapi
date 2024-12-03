@@ -6,6 +6,9 @@ hero:
   name: "tApi"
   text: "基于 TypeScript 的轻量级 API 设计/描述工具."
   tagline: Work in Progressing
+  image:
+    src: ./bg.svg
+    alt: Banner
   actions:
     - theme: brand
       text: tApi 规范

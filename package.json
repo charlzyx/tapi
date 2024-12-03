@@ -11,7 +11,8 @@
   "description": "Api TypeScript Description.",
   "devDependencies": {
     "@types/node": "^20",
-    "vitepress": "^1.5.0"
+    "vitepress": "^1.5.0",
+    "vitepress-carbon": "^1.5.0"
   },
   "homepage": "https://github.com/charlzyx/tapi#readme",
   "keywords": [],
