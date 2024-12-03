@@ -75,6 +75,13 @@ export const getDtsNodes = (project: Project) => {
     } else {
       //  .ts 文件
       sourceFile.getStatements().forEach((statement) => {
+        // 在同一个文件中写 class 也是合理的吧， 就看类型报不报错了
+        if (Node.isClassDeclaration(statement)) {
+          if (sholudIgnore(statement)) return;
+          const clz = statement;
+          const name = clz.getName();
+          datas[name] = clz;
+        }
         // TODO： 需要什么特殊条件来过滤吗
         // 必须是 type alias = {}
         if (Node.isTypeAliasDeclaration(statement)) {
