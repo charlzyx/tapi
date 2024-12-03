@@ -2,9 +2,9 @@
 
 > !! Work in Progress
 
-tApi 是一款基于 TypeScript 的轻量级 API 设计/描述工具链.
+tApi 是一款基于 TypeScript 的下一代 API 设计/描述工具链.
 
-旨在使用 Typescript 类型的表现力替代 OpenAPI 冗长的语法, 成为下一代接口的设计文档工具链.
+旨在使用 Typescript 类型的表现力替代 OpenAPI 冗长的语法;
 
 ## 核心特性 / Features
 
@@ -18,10 +18,10 @@ tApi 是一款基于 TypeScript 的轻量级 API 设计/描述工具链.
 
 ### 功能规划 / Roadmap
 
-[] `importer` 支持转换 Postman、Swagger 和 OpenAPI 格式，方便与现有工具集成。
-[] `codegen` 支持代码生成插件定制能力
-[] `runner` 支持 Mock 与 Test 脚本
-[] `devtools` 开发 VSCode 插件/GUI 客户端
+- [] `importer` 支持转换 Postman、Swagger 和 OpenAPI 格式，方便与现有工具集成。
+- [] `codegen` 支持代码生成插件定制能力
+- [] `runner` 支持 Mock 与 Test 脚本
+- [] `devtools` 开发 VSCode 插件/GUI 客户端
 
 ### 灵感来自 [bruno](https://docs.usebruno.com/introduction/what-is-bruno)
 
