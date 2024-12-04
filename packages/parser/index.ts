@@ -1,5 +1,8 @@
 import { parserApiDefinition } from "./parserApiDefinition";
 import { parserGenericDefinition } from "./parserGenericDefinition";
+import { JsonSchemaDraft07 } from "@hyperjump/json-schema/draft-07";
+
+import * as path from "path";
 
 import {
   SymbolFlags,
@@ -10,11 +13,139 @@ import {
   PropertySignature,
   TypeAliasDeclaration,
   TypeParameterDeclaration,
+  ClassDeclaration,
+  PropertyDeclaration,
+  TypeNode,
 } from "ts-morph";
 import { getDtsNodes } from "./getDtsNodes";
+import { getNodeExtraInfo } from "./getNodeExtraInfo";
+
+// const resolveType = (
+//   typ: Type,
+//   clzNameMap: WeakMap<ClassDeclaration, string>
+// ): JsonSchemaDraft07 => {
+//   return {
+//     type: "object",
+//   };
+// };
+
+const resolveType = (
+  type: Type,
+  clzNameMap: WeakMap<ClassDeclaration, string>,
+  extra: Record<string, string> = {},
+  typeNode?: TypeNode
+): JsonSchemaDraft07 | JsonSchemaDraft07[] => {
+  const tsymbol = type.getSymbol();
+  const tasymbol = type.getAliasSymbol();
+  const nodesymbol = typeNode && typeNode.getSymbol();
+  if (typeNode && Node.isTypeReference(typeNode)) {
+    const typeName = typeNode.getTypeName().getText();
+    const typeType = typeNode.getTypeName().getType();
+    console.log("🚀 ~ typeName:", typeName);
+  }
+
+  if (type.isString()) {
+    return { type: "string", ...extra };
+  }
+
+  if (type.isNumber()) {
+    return { type: "number", ...extra };
+  }
+
+  if (type.isBoolean() || type.isBooleanLiteral()) {
+    return { type: "boolean", ...extra };
+  }
+
+  if (type.isLiteral()) {
+    return {
+      type: "string",
+      const: type.getLiteralValue().toString(),
+      ...extra,
+    };
+  }
+
+  if (typeNode && Node.isTypeReference(typeNode)) {
+    const symbol = typeNode.getSymbol();
+    const tsymbol = type.getSymbol();
+    const aliasSymbol = type.getAliasSymbol();
+    if (tsymbol) {
+      const declarations = tsymbol.getDeclarations();
+
+      // .find((x) => clzNameMap.has(x as any));
+      declarations.forEach((dec) => {
+        const has = clzNameMap.has(dec as ClassDeclaration);
+        console.log("🚀 ~ declarations.forEach ~ has:", has);
+      });
+    }
+
+    return {
+      $ref: "",
+    };
+  }
+
+  if (type.isArray()) {
+    return {
+      type: "array",
+      items: resolveType(type.getArrayElementType(), clzNameMap),
+    };
+  }
+
+  if (type.isUnion()) {
+    return type
+      .getUnionTypes()
+      .map((subType) => resolveType(subType, clzNameMap) as JsonSchemaDraft07);
+  }
+
+  const jsonschema: JsonSchemaDraft07 = {};
+};
+
+const parseDefinitions = (definitions: ClassDeclaration[]) => {
+  const defMap = {} as Record<string, JsonSchemaDraft07>;
+  const nameMap = new WeakMap();
+  for (const def of definitions) {
+    let clzName = def.getName();
+    // rename and link, 根据所在文件和数字名称重命名
+    if (defMap[clzName]) {
+      const atFile = def.getSourceFile().getFilePath();
+      clzName = clzName + "_At_" + path.basename(atFile);
+      let acc = 0;
+      const baseName = clzName;
+
+      while (defMap[clzName]) {
+        acc = acc + 1;
+        clzName = baseName + acc;
+      }
+    }
+    nameMap.set(def, clzName);
+  }
+
+  for (const def of definitions) {
+    const extra = getNodeExtraInfo(def);
+    let clzName = nameMap.get(def);
+    const schema: JsonSchemaDraft07 = {
+      ...extra.merged,
+      type: "object",
+      properties: def.getProperties().reduce((map, prop) => {
+        const extra = getNodeExtraInfo(prop);
+        map[prop.getName()] = resolveType(
+          prop.getType(),
+          nameMap,
+          extra.merged,
+          prop.getTypeNode()
+        );
+        return map;
+      }, {}),
+    };
+
+    defMap[clzName] = schema;
+  }
+
+  return defMap;
+};
 
 export const parser = (project: Project) => {
-  const dts = getDtsNodes(project);
+  const { definitions, operations, typings } = getDtsNodes(project);
+  const defs = parseDefinitions(definitions);
   console.log("🚀 ~ parser ~ meta:");
 };
 

@@ -82,30 +82,6 @@ const resolveType = (
       const node = symbol.getValueDeclaration() as unknown as
         | PropertyDeclaration
         | undefined;
-      const before = node.getLeadingCommentRanges();
-      const after = node.getTrailingCommentRanges();
-      const blines = before.map((item) => item.getText());
-      const alines = after.map((item) => item.getText());
-      // console.log({ alines, blines });
-
-      const jsDocs = node?.getJsDocs().map((jsDoc) => {
-        const txt = jsDoc.getText();
-        const inner = jsDoc.getInnerText();
-        const cc = jsDoc.getComment();
-        const cct = jsDoc.getCommentText();
-        const desc = jsDoc.getDescription();
-        return jsDoc;
-      });
-
-      // ..reduce((map, tag) => {
-      //   map = map || {};
-      //   const t = tag.getName();
-      // map[t] = tag
-      //   .getText()
-      //   .map((seg) => seg.text)
-      //   .join("|");
-      // return map;
-      // }, undefined as Record<string, string>);
       if (node) {
         const fullType = symbol.getTypeAtLocation(node);
         const resolved = resolveType(fullType, genericDts);
