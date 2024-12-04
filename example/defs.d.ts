@@ -30,7 +30,7 @@ class Category {
 
 class User {
   id: int64;
-  username: number;
+  username: string;
   firstName: string;
   lastName: string;
   email: string;

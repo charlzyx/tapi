@@ -60,14 +60,20 @@ export const getNodeExtraInfo = (
     .join("\n");
 
   // 填充 json schema 定义, 当然害需要一个白名单
+  const desc =
+    jsDocs.description ||
+    decorators.description ||
+    leadingComment ||
+    trailingComment;
+
   const merged = {
     ...jsDocs,
     ...decorators,
-    description:
-      jsDocs.description ||
-      decorators.description ||
-      leadingComment ||
-      trailingComment,
   };
+
+  if (desc) {
+    merged.description = desc;
+  }
+
   return { decorators, jsDocs, leadingComment, trailingComment, merged };
 };

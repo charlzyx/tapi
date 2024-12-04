@@ -4,4 +4,4 @@ bun.lockb
 .vitepress/cache
 docs/.vitepress/cache
 docs/.vitepress/dist
-ret.json
+.debug/
