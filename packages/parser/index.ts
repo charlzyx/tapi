@@ -30,6 +30,192 @@ import { getNodeExtraInfo } from "./getNodeExtraInfo";
 //   };
 // };
 
+const symbolis = (symbol: Symbol) => {
+  const flags = [];
+  if (symbol.hasFlags(SymbolFlags.None)) flags.push(" None");
+  if (symbol.hasFlags(SymbolFlags.FunctionScopedVariable))
+    flags.push(" FunctionScopedVariable");
+  if (symbol.hasFlags(SymbolFlags.BlockScopedVariable))
+    flags.push(" BlockScopedVariable");
+  if (symbol.hasFlags(SymbolFlags.Property)) flags.push(" Property");
+  if (symbol.hasFlags(SymbolFlags.EnumMember)) flags.push(" EnumMember");
+  if (symbol.hasFlags(SymbolFlags.Function)) flags.push(" Function");
+  if (symbol.hasFlags(SymbolFlags.Class)) flags.push(" Class");
+  if (symbol.hasFlags(SymbolFlags.Interface)) flags.push(" Interface");
+  if (symbol.hasFlags(SymbolFlags.ConstEnum)) flags.push(" ConstEnum");
+  if (symbol.hasFlags(SymbolFlags.RegularEnum)) flags.push(" RegularEnum");
+  if (symbol.hasFlags(SymbolFlags.ValueModule)) flags.push(" ValueModule");
+  if (symbol.hasFlags(SymbolFlags.NamespaceModule))
+    flags.push(" NamespaceModule");
+  if (symbol.hasFlags(SymbolFlags.TypeLiteral)) flags.push(" TypeLiteral");
+  if (symbol.hasFlags(SymbolFlags.ObjectLiteral)) flags.push(" ObjectLiteral");
+  if (symbol.hasFlags(SymbolFlags.Method)) flags.push(" Method");
+  if (symbol.hasFlags(SymbolFlags.Constructor)) flags.push(" Constructor");
+  if (symbol.hasFlags(SymbolFlags.GetAccessor)) flags.push(" GetAccessor");
+  if (symbol.hasFlags(SymbolFlags.SetAccessor)) flags.push(" SetAccessor");
+  if (symbol.hasFlags(SymbolFlags.Signature)) flags.push(" Signature");
+  if (symbol.hasFlags(SymbolFlags.TypeParameter)) flags.push(" TypeParameter");
+  if (symbol.hasFlags(SymbolFlags.TypeAlias)) flags.push(" TypeAlias");
+  if (symbol.hasFlags(SymbolFlags.ExportValue)) flags.push(" ExportValue");
+  if (symbol.hasFlags(SymbolFlags.Alias)) flags.push(" Alias");
+  if (symbol.hasFlags(SymbolFlags.Prototype)) flags.push(" Prototype");
+  if (symbol.hasFlags(SymbolFlags.ExportStar)) flags.push(" ExportStar");
+  if (symbol.hasFlags(SymbolFlags.Optional)) flags.push(" Optional");
+  if (symbol.hasFlags(SymbolFlags.Transient)) flags.push(" Transient");
+  if (symbol.hasFlags(SymbolFlags.Assignment)) flags.push(" Assignment");
+  if (symbol.hasFlags(SymbolFlags.ModuleExports)) flags.push(" ModuleExports");
+  if (symbol.hasFlags(SymbolFlags.All)) flags.push(" All");
+  if (symbol.hasFlags(SymbolFlags.Enum)) flags.push(" Enum");
+  if (symbol.hasFlags(SymbolFlags.Variable)) flags.push(" Variable");
+  if (symbol.hasFlags(SymbolFlags.Value)) flags.push(" Value");
+  if (symbol.hasFlags(SymbolFlags.Type)) flags.push(" Type");
+  if (symbol.hasFlags(SymbolFlags.Namespace)) flags.push(" Namespace");
+  if (symbol.hasFlags(SymbolFlags.Module)) flags.push(" Module");
+  if (symbol.hasFlags(SymbolFlags.Accessor)) flags.push(" Accessor");
+  if (symbol.hasFlags(SymbolFlags.FunctionScopedVariableExcludes))
+    flags.push(" FunctionScopedVariableExcludes");
+  if (symbol.hasFlags(SymbolFlags.BlockScopedVariableExcludes))
+    flags.push(" BlockScopedVariableExcludes");
+  if (symbol.hasFlags(SymbolFlags.ParameterExcludes))
+    flags.push(" ParameterExcludes");
+  if (symbol.hasFlags(SymbolFlags.PropertyExcludes))
+    flags.push(" PropertyExcludes");
+  if (symbol.hasFlags(SymbolFlags.EnumMemberExcludes))
+    flags.push(" EnumMemberExcludes");
+  if (symbol.hasFlags(SymbolFlags.FunctionExcludes))
+    flags.push(" FunctionExcludes");
+  if (symbol.hasFlags(SymbolFlags.ClassExcludes)) flags.push(" ClassExcludes");
+  if (symbol.hasFlags(SymbolFlags.InterfaceExcludes))
+    flags.push(" InterfaceExcludes");
+  if (symbol.hasFlags(SymbolFlags.RegularEnumExcludes))
+    flags.push(" RegularEnumExcludes");
+  if (symbol.hasFlags(SymbolFlags.ConstEnumExcludes))
+    flags.push(" ConstEnumExcludes");
+  if (symbol.hasFlags(SymbolFlags.ValueModuleExcludes))
+    flags.push(" ValueModuleExcludes");
+  if (symbol.hasFlags(SymbolFlags.NamespaceModuleExcludes))
+    flags.push(" NamespaceModuleExcludes");
+  if (symbol.hasFlags(SymbolFlags.MethodExcludes))
+    flags.push(" MethodExcludes");
+  if (symbol.hasFlags(SymbolFlags.GetAccessorExcludes))
+    flags.push(" GetAccessorExcludes");
+  if (symbol.hasFlags(SymbolFlags.SetAccessorExcludes))
+    flags.push(" SetAccessorExcludes");
+  if (symbol.hasFlags(SymbolFlags.AccessorExcludes))
+    flags.push(" AccessorExcludes");
+  if (symbol.hasFlags(SymbolFlags.TypeParameterExcludes))
+    flags.push(" TypeParameterExcludes");
+  if (symbol.hasFlags(SymbolFlags.TypeAliasExcludes))
+    flags.push(" TypeAliasExcludes");
+  if (symbol.hasFlags(SymbolFlags.AliasExcludes)) flags.push(" AliasExcludes");
+  if (symbol.hasFlags(SymbolFlags.ModuleMember)) flags.push(" ModuleMember");
+  if (symbol.hasFlags(SymbolFlags.ExportHasLocal))
+    flags.push(" ExportHasLocal");
+  if (symbol.hasFlags(SymbolFlags.BlockScoped)) flags.push(" BlockScoped");
+  if (symbol.hasFlags(SymbolFlags.PropertyOrAccessor))
+    flags.push(" PropertyOrAccessor");
+  if (symbol.hasFlags(SymbolFlags.ClassMember)) flags.push(" ClassMember");
+  return flags;
+};
+
+const typeis = (type: Type) => {
+  const types = [];
+  if (type.isAnonymous()) {
+    types.push("isAnonymous");
+  }
+  if (type.isAny()) {
+    types.push("isAny");
+  }
+  if (type.isArray()) {
+    types.push("isArray");
+  }
+  if (type.isBigInt()) {
+    types.push("isBigInt");
+  }
+  if (type.isBigIntLiteral()) {
+    types.push("isBigIntLiteral");
+  }
+  if (type.isBoolean()) {
+    types.push("isBoolean");
+  }
+  if (type.isBooleanLiteral()) {
+    types.push("isBooleanLiteral");
+  }
+  if (type.isClass()) {
+    types.push("isClass");
+  }
+  if (type.isClassOrInterface()) {
+    types.push("isClassOrInterface");
+  }
+  if (type.isEnum()) {
+    types.push("isEnum");
+  }
+  if (type.isEnumLiteral()) {
+    types.push("isEnumLiteral");
+  }
+  if (type.isInterface()) {
+    types.push("isInterface");
+  }
+  if (type.isIntersection()) {
+    types.push("isIntersection");
+  }
+  if (type.isLiteral()) {
+    types.push("isLiteral");
+  }
+  if (type.isNever()) {
+    types.push("isNever");
+  }
+  if (type.isNull()) {
+    types.push("isNull");
+  }
+  if (type.isNullable()) {
+    types.push("isNullable");
+  }
+  if (type.isNumber()) {
+    types.push("isNumber");
+  }
+  if (type.isNumberLiteral()) {
+    types.push("isNumberLiteral");
+  }
+  if (type.isObject()) {
+    types.push("isObject");
+  }
+  if (type.isReadonlyArray()) {
+    types.push("isReadonlyArray");
+  }
+  if (type.isString()) {
+    types.push("isString");
+  }
+  if (type.isStringLiteral()) {
+    types.push("isStringLiteral");
+  }
+  if (type.isTemplateLiteral()) {
+    types.push("isTemplateLiteral");
+  }
+  if (type.isTuple()) {
+    types.push("isTuple");
+  }
+  if (type.isTypeParameter()) {
+    types.push("isTypeParameter");
+  }
+  if (type.isUndefined()) {
+    types.push("isUndefined");
+  }
+  if (type.isUnion()) {
+    types.push("isUnion");
+  }
+  if (type.isUnionOrIntersection()) {
+    types.push("isUnionOrIntersection");
+  }
+  if (type.isUnknown()) {
+    types.push("isUnknown");
+  }
+  if (type.isVoid()) {
+    types.push("isVoid");
+  }
+  return types;
+};
+
 const resolveType = (info: {
   type: Type;
   typeNode?: TypeNode;
@@ -38,6 +224,15 @@ const resolveType = (info: {
 }): JsonSchemaDraft07 | JsonSchemaDraft07[] => {
   const { type, defNameMap, extra = {}, typeNode } = info;
   let typeName: string | undefined;
+
+  const symbol = type.getSymbol();
+  const aliasSymbol = type.getAliasSymbol();
+  const declarations = symbol?.getDeclarations();
+  const aliasDeclarations = aliasSymbol?.getDeclarations();
+  const txt = type.getText();
+  const ntxt = typeNode?.getText();
+  const kindName = typeNode?.getKindName();
+  const typeIs = typeis(type);
 
   if (typeNode) {
     if (Node.isTypeReference(typeNode)) {
@@ -124,12 +319,25 @@ const resolveType = (info: {
     );
   }
 
-  if (type.isClassOrInterface()) {
+  if (type.isObject() || type.isClassOrInterface()) {
     return {
       ...extra,
       type: "object",
       $comment: typeName,
       properties: type.getProperties().reduce((map, propSymbol) => {
+        const propNode =
+          propSymbol.getValueDeclaration() ?? propSymbol.getDeclarations()[0];
+        const propType = propSymbol.getTypeAtLocation(propNode);
+        const propName = propSymbol.getName();
+        // const type = propSymbol.getDeclaredType();
+        // const dts = propSymbol.getDeclarations();
+        // const vdt = propSymbol.getValueDeclaration();
+        // const sis = symbolis(propSymbol);
+        map[propSymbol.getName()] = resolveType({
+          type: propType,
+          defNameMap,
+          typeNode: propNode as any,
+        });
         return map;
       }, {}),
     };
