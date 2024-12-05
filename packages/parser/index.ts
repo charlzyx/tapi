@@ -1,21 +1,17 @@
-import { parserApiDefinition } from "./parserApiDefinition";
-import { parserGenericDefinition } from "./parserGenericDefinition";
 import { JsonSchemaDraft07 } from "@hyperjump/json-schema/draft-07";
 
-import * as path from "path";
 import * as fs from "fs";
+import * as path from "path";
 
 import {
-  SymbolFlags,
+  ClassDeclaration,
   Node,
+  printNode,
   Project,
   Symbol,
+  SymbolFlags,
   Type,
-  PropertySignature,
   TypeAliasDeclaration,
-  TypeParameterDeclaration,
-  ClassDeclaration,
-  PropertyDeclaration,
   TypeNode,
 } from "ts-morph";
 import { getDtsNodes } from "./getDtsNodes";
@@ -234,45 +230,45 @@ const resolveType = (info: {
   const kindName = typeNode?.getKindName();
   const typeIs = typeis(type);
 
-  if (typeNode) {
-    if (Node.isTypeReference(typeNode)) {
-      typeName = typeNode.getTypeName().getText();
+  // if (typeNode) {
+  //   if (Node.isTypeReference(typeNode)) {
+  //     typeName = typeNode.getTypeName().getText();
 
-      const symbol = type.getSymbol();
+  //     const symbol = type.getSymbol();
 
-      if (symbol) {
-        const declarations = symbol.getDeclarations();
-        let refName = null;
-        declarations.forEach((dec) => {
-          if (Node.isClassDeclaration(dec) && defNameMap.has(dec)) {
-            refName = defNameMap.get(dec);
-          }
-        });
+  //     if (symbol) {
+  //       const declarations = symbol.getDeclarations();
+  //       let refName = null;
+  //       declarations.forEach((dec) => {
+  //         if (Node.isClassDeclaration(dec) && defNameMap.has(dec)) {
+  //           refName = defNameMap.get(dec);
+  //         }
+  //       });
 
-        if (refName) {
-          return {
-            $ref: "#" + refName,
-          };
-        }
-      }
-    }
-    if (Node.isTypeLiteral(typeNode)) {
-      return {
-        ...extra,
-        type: "object",
-        properties: typeNode.getProperties().reduce((map, prop) => {
-          const extra = getNodeExtraInfo(prop);
-          map[prop.getName()] = resolveType({
-            type: prop.getType(),
-            typeNode: prop.getTypeNode(),
-            defNameMap,
-            extra: extra.merged,
-          });
-          return map;
-        }, {}),
-      };
-    }
-  }
+  //       if (refName) {
+  //         return {
+  //           $ref: "#" + refName,
+  //         };
+  //       }
+  //     }
+  //   }
+  //   if (Node.isTypeLiteral(typeNode)) {
+  //     return {
+  //       ...extra,
+  //       type: "object",
+  //       properties: typeNode.getProperties().reduce((map, prop) => {
+  //         const extra = getNodeExtraInfo(prop);
+  //         map[prop.getName()] = resolveType({
+  //           type: prop.getType(),
+  //           typeNode: prop.getTypeNode(),
+  //           defNameMap,
+  //           extra: extra.merged,
+  //         });
+  //         return map;
+  //       }, {}),
+  //     };
+  //   }
+  // }
 
   if (type.isString()) {
     return { ...extra, type: "string", $comment: typeName };
@@ -319,7 +315,8 @@ const resolveType = (info: {
     );
   }
 
-  if (type.isObject() || type.isClassOrInterface()) {
+  // Array 也是 Object ， 所以保证放在 isArray 后面
+  if (type.isObject() || type.isIntersection()) {
     return {
       ...extra,
       type: "object",
@@ -327,12 +324,32 @@ const resolveType = (info: {
       properties: type.getProperties().reduce((map, propSymbol) => {
         const propNode =
           propSymbol.getValueDeclaration() ?? propSymbol.getDeclarations()[0];
-        const propType = propSymbol.getTypeAtLocation(propNode);
-        const propName = propSymbol.getName();
+        const propType = propNode
+          ? propSymbol.getTypeAtLocation(propNode)
+          : propSymbol.getDeclaredType();
+        const maybe = propType.getSymbol()?.getValueDeclaration();
+        const isDef = maybe && defNameMap.has(maybe as ClassDeclaration);
+        if (isDef) {
+          map[propSymbol.getName()] = {
+            $ref: "#" + defNameMap.get(maybe as ClassDeclaration),
+          };
+          return map;
+        }
+        const ptxt = propSymbol.getName();
+        const propNodeTxt = propNode?.getText();
+        const propTypeTxt = propType?.getText();
+
+        // const propName = propSymbol.getName();
         // const type = propSymbol.getDeclaredType();
         // const dts = propSymbol.getDeclarations();
         // const vdt = propSymbol.getValueDeclaration();
         // const sis = symbolis(propSymbol);
+        if (!propNode) {
+          console.log("what happen");
+          return map;
+        } else {
+          console.log("what's node");
+        }
         map[propSymbol.getName()] = resolveType({
           type: propType,
           defNameMap,
