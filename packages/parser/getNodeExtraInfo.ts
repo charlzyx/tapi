@@ -6,6 +6,11 @@ import {
   TypeAliasDeclaration,
 } from "ts-morph";
 
+/**
+ * 获取节点的额外信息，包括装饰器、JSDoc注释、前置注释和后置注释
+ * @param node 支持的节点类型：ClassDeclaration、PropertyDeclaration、TypeAliasDeclaration、PropertySignature
+ * @returns 返回解析后的节点信息对象
+ */
 export const getNodeExtraInfo = (
   node:
     | ClassDeclaration
@@ -59,7 +64,7 @@ export const getNodeExtraInfo = (
     })
     .join("\n");
 
-  // 填充 json schema 定义, 当然害需要一个白名单
+  // 优先级：JSDoc description > 装饰器 description > 前置注释 > 后置注释
   const desc =
     jsDocs.description ||
     decorators.description ||

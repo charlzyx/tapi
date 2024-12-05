@@ -26,6 +26,7 @@ import { getNodeExtraInfo } from "./getNodeExtraInfo";
 //   };
 // };
 
+// 优化一下下面这个函数， 使用 switch 语句
 const symbolis = (symbol: Symbol) => {
   const flags = [];
   if (symbol.hasFlags(SymbolFlags.None)) flags.push(" None");
@@ -219,6 +220,11 @@ const resolveType = (info: {
   extra?: Record<string, string>;
 }): JsonSchemaDraft07 | JsonSchemaDraft07[] => {
   const { type, defNameMap, extra = {}, typeNode } = info;
+  // 建议添加类型缓存，避免重复解析
+  const typeCache = new WeakMap<Type, JsonSchemaDraft07>();
+
+  // 建议添加循环引用检测
+  const circularRefs = new Set<Type>();
   let typeName: string | undefined;
 
   const symbol = type.getSymbol();
@@ -322,19 +328,35 @@ const resolveType = (info: {
       type: "object",
       $comment: typeName,
       properties: type.getProperties().reduce((map, propSymbol) => {
+        // 获取属性节点的声明，优先使用值声明，否则使用第一个声明
         const propNode =
           propSymbol.getValueDeclaration() ?? propSymbol.getDeclarations()[0];
+
+        // 获取属性的类型信息
         const propType = propNode
-          ? propSymbol.getTypeAtLocation(propNode)
-          : propSymbol.getDeclaredType();
-        const maybe = propType.getSymbol()?.getValueDeclaration();
-        const isDef = maybe && defNameMap.has(maybe as ClassDeclaration);
-        if (isDef) {
+          ? propSymbol.getTypeAtLocation(propNode) // 如果有节点，获取该位置的类型
+          : propSymbol.getDeclaredType(); // 否则获取声明的类型
+
+        if (!propNode) {
+          console.log(
+            "[DEBUG] Using getDeclaredType for prop:",
+            propSymbol.getName()
+          );
+        }
+
+        // 检查是否为已定义的类型引用
+        const maybeTypeDecl = propType.getSymbol()?.getValueDeclaration();
+        const isDefinedType =
+          maybeTypeDecl && defNameMap.has(maybeTypeDecl as ClassDeclaration);
+
+        // 如果是已定义的类型，添加引用
+        if (isDefinedType) {
           map[propSymbol.getName()] = {
-            $ref: "#" + defNameMap.get(maybe as ClassDeclaration),
+            $ref: "#" + defNameMap.get(maybeTypeDecl as ClassDeclaration),
           };
           return map;
         }
+
         const ptxt = propSymbol.getName();
         const propNodeTxt = propNode?.getText();
         const propTypeTxt = propType?.getText();
@@ -350,6 +372,8 @@ const resolveType = (info: {
         } else {
           console.log("what's node");
         }
+
+        // 解析属性类型并添加到map中
         map[propSymbol.getName()] = resolveType({
           type: propType,
           defNameMap,

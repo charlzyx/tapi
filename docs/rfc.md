@@ -80,17 +80,17 @@ export type searchUserList = {
 };
 ```
 
-| 定义                        | 属名                    | 说明                                                        |
-| --------------------------- | ----------------------- | ----------------------------------------------------------- |
-| `export type [OperationID]` | -唯一标识 / OperationID | 请保证全局唯一                                              |
-| method                      | -请求方法 / Method      | `GET\|POST\|PUT\|OPTION\|HEAD\|TRACE`                       |
-| url                         | -请求地址 / Url         | 支持 `{{变量}}` 与`/getby/:id` 路径参数表示法               |
-| headers                     | -请求头 / Headers       | 根据 HTTP 标准，`Key` 值大小写不敏感                        |
-| cookies                     | -请求 / Cookies         | 根据标准 TODO                                               |
-| path                        | -路径参数 / PathParams  | 路径参数，只有字符串类型，这是一个补充， 更多是为了表明语义 |
-| query                       | -请求参数 / QueryParams | 类型限制参考 qs                                             |
-| body                        | -请求体 / RequestBody   | 比较自由， 二进制 TODO                                      |
-| resp                        | -响应值 / Response      | 支持多中类型联合类型                                        |
+| 定义                 | 属名                    | 说明                                                        |
+| -------------------- | ----------------------- | ----------------------------------------------------------- |
+| `type [OperationID]` | -唯一标识 / OperationID | 请保证全局唯一                                              |
+| method               | -请求方法 / Method      | `GET\|POST\|PUT\|OPTION\|HEAD\|TRACE`                       |
+| url                  | -请求地址 / Url         | 支持 `{{变量}}` 与`/getby/:id` 路径参数表示法               |
+| headers              | -请求头 / Headers       | 根据 HTTP 标准，`Key` 值大小写不敏感                        |
+| cookies              | -请求 / Cookies         | 根据标准 TODO                                               |
+| path                 | -路径参数 / PathParams  | 路径参数，只有字符串类型，这是一个补充， 更多是为了表明语义 |
+| query                | -请求参数 / QueryParams | 类型限制参考 qs                                             |
+| body                 | -请求体 / RequestBody   | 比较自由， 二进制 TODO                                      |
+| resp                 | -响应值 / Response      | 支持多中类型联合类型                                        |
 
 ## 关于类型中泛型
 

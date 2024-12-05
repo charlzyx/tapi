@@ -12,30 +12,33 @@ const IgnoreRuleKeys = {
 };
 import { getNodeExtraInfo } from "./getNodeExtraInfo";
 
+// 判断是否应跳过该节点
 const shouldSkip = (node: ClassDeclaration | TypeAliasDeclaration) => {
   const { decorators, jsDocs, leadingComment } = getNodeExtraInfo(node);
-  // 在 class 的装饰器中 有忽略标签
+
+  // 检查装饰器中是否有忽略标签
   const skipByDecorator =
     Object.keys(decorators).findIndex((decoratorName) =>
       IgnoreRuleKeys.classDecorators.includes(decoratorName)
     ) > -1;
   if (skipByDecorator) return true;
 
-  // 在jsDoc 中使用了 @ignore tag
+  // 检查 jsDoc 中是否有忽略标签
   const skipByJsDoc =
     Object.keys(jsDocs).findIndex((tagName) =>
       IgnoreRuleKeys.jsDoc.includes(tagName)
     ) > -1;
-
   if (skipByJsDoc) return true;
-  // 前方单行或多行出现了忽略标志
+
+  // 检查前导注释中是否有忽略标签
   const skipByComment =
     leadingComment
-      .split(/s+/)
+      .split(/\s+/)
       .findIndex((word) => IgnoreRuleKeys.leadingComment.includes(word)) > -1;
   if (skipByComment) return true;
 };
 
+// 获取项目中的 d.ts 节点
 export const getDtsNodes = (project: Project) => {
   const typings: TypeAliasDeclaration[] = [];
   const definitions: ClassDeclaration[] = [];
@@ -43,43 +46,40 @@ export const getDtsNodes = (project: Project) => {
   const unique = {} as Record<string, TypeAliasDeclaration>;
 
   project.getSourceFiles().forEach((sourceFile) => {
-    // const filePath = sourceFile.getFilePath();
-    //  .d.ts 文件
+    // 处理 .d.ts 文件
     if (sourceFile.isDeclarationFile()) {
       sourceFile.getStatements().forEach((statement) => {
-        // 获取自定义泛型文件
-        // type alias
+        // 处理类型别名声明
         if (Node.isTypeAliasDeclaration(statement)) {
           if (shouldSkip(statement)) return;
           const typeParams = statement.getTypeParameters();
-          // 并且有泛型参数
+          // 仅处理有泛型参数的类型别名
           if (typeParams.length > 0) {
             typings.push(statement);
           }
         }
-        // TODO： 需要什么特殊条件来过滤吗
+        // 处理类声明
         if (Node.isClassDeclaration(statement)) {
           if (shouldSkip(statement)) return;
           definitions.push(statement);
         }
       });
     } else {
-      //  .ts 文件
+      // 处理 .ts 文件
       sourceFile.getStatements().forEach((statement) => {
-        // 在同一个文件中写 class 也是合理的吧， 就看类型报不报错了
+        // 处理类声明
         if (Node.isClassDeclaration(statement)) {
           if (shouldSkip(statement)) return;
           definitions.push(statement);
         }
-        // TODO： 需要什么特殊条件来过滤吗
-        // 必须是 type alias = {}
+        // 处理类型别名声明
         if (Node.isTypeAliasDeclaration(statement)) {
           const typ = statement.getTypeNode();
           if (shouldSkip(statement)) return;
-          // 必须事 TypeLiteral 字面量定义
+          // 必须是 TypeLiteral 字面量定义
           if (Node.isTypeLiteral(typ)) {
             const operation = statement;
-            // 必须有 url字段
+            // 必须有 url 字段
             const hasUrl = operation.getType().getProperty("url");
             if (hasUrl) {
               const name = operation.getName();
