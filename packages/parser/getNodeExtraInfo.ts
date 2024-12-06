@@ -18,26 +18,21 @@ export const getNodeExtraInfo = (
     | TypeAliasDeclaration
     | PropertySignature
 ) => {
-  // class 和 class 属性才有 decorator
+  // 获取装饰器信息，仅适用于类和类属性
   const decorators =
     Node.isClassDeclaration(node) || Node.isPropertyDeclaration(node)
       ? node.getDecorators().reduce((map, dec) => {
           const propName = dec.getName();
           const propValue = dec
             .getArguments()
-            .map((arg) => {
-              return arg.getFullText();
-            })
+            .map((arg) => arg.getFullText())
             .join("/");
           map[propName] = propValue;
           return map;
         }, {} as Record<string, string>)
       : {};
 
-  /**
-   * 注意!! 不支持 @type
-   * @see https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
-   */
+  // 获取JSDoc标签信息，注意不支持 @type
   const jsDocs = node.getJsDocs().reduce((map, doc) => {
     const tags = doc
       .getTags()
@@ -50,18 +45,13 @@ export const getNodeExtraInfo = (
     return { ...map, ...tags };
   }, {} as Record<string, string>);
 
-  const leadingComment = node
-    .getLeadingCommentRanges()
-    .map((cmm) => {
-      return cmm.getText();
-    })
-    .join("\n");
+  // 获取前置注释，若存在则取最后一行
+  const leadingComment = node.getLeadingCommentRanges().pop()?.getText() ?? "";
 
+  // 获取所有后置注释并合并为一个字符串
   const trailingComment = node
     .getTrailingCommentRanges()
-    .map((cmm) => {
-      return cmm.getText();
-    })
+    .map((cmm) => cmm.getText())
     .join("\n");
 
   // 优先级：JSDoc description > 装饰器 description > 前置注释 > 后置注释
@@ -71,11 +61,13 @@ export const getNodeExtraInfo = (
     leadingComment ||
     trailingComment;
 
+  // 合并所有信息
   const merged = {
     ...jsDocs,
     ...decorators,
   };
 
+  // 如果存在描述，则添加到合并对象中
   if (desc) {
     merged.description = desc;
   }

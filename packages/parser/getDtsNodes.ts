@@ -5,11 +5,13 @@ import {
   TypeAliasDeclaration,
 } from "ts-morph";
 
+// 忽略规则的键
 const IgnoreRuleKeys = {
   jsDoc: ["ignore", "WIP", "Draft"],
   classDecorators: ["ignore", "WIP", "Draft"],
   leadingComment: ["@ignore", "@WIP", "@Draft"],
 };
+
 import { getNodeExtraInfo } from "./getNodeExtraInfo";
 
 // 判断是否应跳过该节点
@@ -36,6 +38,8 @@ const shouldSkip = (node: ClassDeclaration | TypeAliasDeclaration) => {
       .split(/\s+/)
       .findIndex((word) => IgnoreRuleKeys.leadingComment.includes(word)) > -1;
   if (skipByComment) return true;
+
+  return false; // 如果没有任何忽略标签，返回 false
 };
 
 // 获取项目中的 d.ts 节点
@@ -46,58 +50,48 @@ export const getDtsNodes = (project: Project) => {
   const unique = {} as Record<string, TypeAliasDeclaration>;
 
   project.getSourceFiles().forEach((sourceFile) => {
-    // 处理 .d.ts 文件
-    if (sourceFile.isDeclarationFile()) {
-      sourceFile.getStatements().forEach((statement) => {
-        // 处理类型别名声明
-        if (Node.isTypeAliasDeclaration(statement)) {
-          if (shouldSkip(statement)) return;
-          const typeParams = statement.getTypeParameters();
-          // 仅处理有泛型参数的类型别名
-          if (typeParams.length > 0) {
-            typings.push(statement);
-          }
+    sourceFile.getStatements().forEach((statement) => {
+      // 处理类声明
+      if (Node.isClassDeclaration(statement)) {
+        if (shouldSkip(statement)) return; // 跳过被忽略的节点
+        definitions.push(statement);
+      }
+      // 处理类型别名声明
+      if (Node.isTypeAliasDeclaration(statement)) {
+        const typ = statement.getTypeNode();
+        if (shouldSkip(statement)) return; // 跳过被忽略的节点
+
+        // 如果是带有泛型的说明是一些辅助类型定义, 虽然暂时没有什么用, 但是先保起来
+        const typeParams = statement.getTypeParameters();
+        // 仅处理有泛型参数的类型别名
+        if (typeParams.length > 0) {
+          typings.push(statement);
         }
-        // 处理类声明
-        if (Node.isClassDeclaration(statement)) {
-          if (shouldSkip(statement)) return;
-          definitions.push(statement);
-        }
-      });
-    } else {
-      // 处理 .ts 文件
-      sourceFile.getStatements().forEach((statement) => {
-        // 处理类声明
-        if (Node.isClassDeclaration(statement)) {
-          if (shouldSkip(statement)) return;
-          definitions.push(statement);
-        }
-        // 处理类型别名声明
-        if (Node.isTypeAliasDeclaration(statement)) {
-          const typ = statement.getTypeNode();
-          if (shouldSkip(statement)) return;
-          // 必须是 TypeLiteral 字面量定义
-          if (Node.isTypeLiteral(typ)) {
-            const operation = statement;
-            // 必须有 url 字段
-            const hasUrl = operation.getType().getProperty("url");
-            if (hasUrl) {
-              const name = operation.getName();
-              if (unique[name]) {
-                throw new Error(
-                  "Api 操作定义出现了重复" +
-                    name +
-                    "重复定义所在文件: " +
-                    unique[name].getSourceFile().getFilePath()
-                );
-              }
-              operations.push(operation);
-              unique[name] = operation;
+
+        // 否则就看是不是 ApiOperation 定义
+        // 条件是必须是 TypeLiteral 字面量定义
+        if (Node.isTypeLiteral(typ)) {
+          const operation = statement;
+          // 必须有 url 字段
+          const hasUrl = operation.getType().getProperty("url");
+          if (hasUrl) {
+            const name = operation.getName();
+            if (unique[name]) {
+              throw new Error(
+                "Api 操作定义出现了重复" +
+                  name +
+                  "重复定义所在文件: " +
+                  unique[name].getSourceFile().getFilePath() +
+                  ":" +
+                  unique[name].getStartLineNumber() // 使用 getLine() 获取行号
+              );
             }
+            operations.push(operation);
+            unique[name] = operation; // 记录唯一的操作
           }
         }
-      });
-    }
+      }
+    });
   });
 
   return {

@@ -7,7 +7,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   extends: baseConfig,
   title: "tApi",
   // srcDir: "./docs",
-  description: "typed application programming interface",
+  description: "Define APIs with the power of TypeScript",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [{ text: "Home", link: "/" }],
