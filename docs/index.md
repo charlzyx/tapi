@@ -25,29 +25,3 @@ features:
     details: 享受 IDE 的智能提示、类型检查和代码重构能力。纯文本的 .ts 文件让版本控制和团队协作更加自然。
 
 ---
-
-
-<div style="margin: auto; padding: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px) + 80px) 64px 64px; overflow: scroll; ">
-
-
-## 快速预览
-
-```ts
-// 定义数据模型
-class Pet {
-  /** Pet's id */
-  id: int64 = 0;
-  name: string;
-  status: "available" | "pending" | "sold";
-}
-
-// 定义 API 操作
-type createPet = {
-  method: "POST";
-  url: "{{SERVER}}/pet";
-  body: Pet;
-  resp: Resp<Pet> | Reason<"Invalid input">;
-};
-```
-
-</div>
