@@ -1,0 +1,1491 @@
+{
+  "createPet": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"PUT\"",
+        "const": "PUT",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/pet\"",
+        "const": "{{SERVER}}/pet",
+        "type": "string"
+      },
+      "resp": {
+        "_code": "Resp<Pet, \"application/json\", 200, {}> | Resp<Pet, \"application/xml\", 200, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Pet, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Pet, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "deletePet": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"DELETE\"",
+        "const": "DELETE",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/pet/:petId\"",
+        "const": "{{SERVER}}/pet/:petId",
+        "type": "string"
+      },
+      "headers": {
+        "_code": "{ api_key: string; }",
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      },
+      "path": {
+        "_code": "{ petId: number; }",
+        "type": "object",
+        "properties": {
+          "petId": {
+            "_code": "number",
+            "type": "number"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Reason<\"Invalid pet value\", 400, {}>",
+        "type": "object",
+        "properties": {
+          "code": {
+            "_code": "number",
+            "type": "number"
+          },
+          "reason": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "findPetByID": {
+    "deprecated": "in js doc",
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/:petId\"",
+        "const": "{{SERVER}}/:petId",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ petId: number; }",
+        "type": "object",
+        "properties": {
+          "petId": {
+            "_code": "number",
+            "type": "number"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Resp<Pet, \"application/json\", 200, {}> | Resp<Pet, \"application/xml\", 200, {}> | Reason<\"Invalid ID supplied\", 400, {}> | Reason<\"Pet not Found\", 404, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Pet, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Pet, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Invalid ID supplied\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Pet not Found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "findPetByStatus": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/findByStatus\"",
+        "const": "{{SERVER}}/findByStatus",
+        "type": "string"
+      },
+      "query": {
+        "_code": "Status",
+        "oneOf": [
+          {
+            "_code": "\"placed\"",
+            "const": "placed",
+            "type": "string"
+          },
+          {
+            "_code": "\"approved\"",
+            "const": "approved",
+            "type": "string"
+          },
+          {
+            "_code": "\"delivered\"",
+            "const": "delivered",
+            "type": "string"
+          }
+        ]
+      },
+      "resp": {
+        "_code": "Resp<Pet, \"application/json\", 200, {}> | Resp<Pet, \"application/xml\", 200, {}> | Reason<\"Invalid status value\", 400, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Pet, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Pet, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Invalid status value\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "findPetByTags": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/findByTags\"",
+        "const": "{{SERVER}}/findByTags",
+        "type": "string"
+      },
+      "query": {
+        "_code": "Tag[]",
+        "type": "array",
+        "items": {
+          "$ref": "#Tag"
+        }
+      },
+      "resp": {
+        "_code": "Resp<Pet, \"application/json\", 200, {}> | Resp<Pet, \"application/xml\", 200, {}> | Reason<\"Invalid status value\", 400, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Pet, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Pet, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Invalid status value\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "updatePet": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"POST\"",
+        "const": "POST",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/pet\"",
+        "const": "{{SERVER}}/pet",
+        "type": "string"
+      },
+      "body": {
+        "_code": "OmitAndRequired<Pet, \"id\", \"name\" | \"photoUrls\">",
+        "type": "array",
+        "allOf": [
+          {
+            "_code": "Omit<Partial<Pet>, \"id\">",
+            "type": "object",
+            "properties": {
+              "status": {
+                "_code": "Status",
+                "oneOf": [
+                  {
+                    "_code": "\"placed\"",
+                    "const": "placed",
+                    "type": "string"
+                  },
+                  {
+                    "_code": "\"approved\"",
+                    "const": "approved",
+                    "type": "string"
+                  },
+                  {
+                    "_code": "\"delivered\"",
+                    "const": "delivered",
+                    "type": "string"
+                  }
+                ]
+              },
+              "tags": {
+                "_code": "Tag[]",
+                "type": "array",
+                "items": {
+                  "$ref": "#Tag"
+                }
+              },
+              "name": {
+                "_code": "string",
+                "type": "string"
+              },
+              "photoUrls": {
+                "_code": "string[]",
+                "type": "array",
+                "items": {
+                  "_code": "string",
+                  "type": "string"
+                }
+              },
+              "category": {
+                "$ref": "#Category"
+              }
+            }
+          },
+          {
+            "_code": "Pick<Pet, \"name\" | \"photoUrls\">",
+            "type": "object",
+            "properties": {
+              "name": {
+                "_code": "string",
+                "type": "string"
+              },
+              "photoUrls": {
+                "_code": "string[]",
+                "type": "array",
+                "items": {
+                  "_code": "string",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "resp": {
+        "_code": "Resp<Pet, \"application/json\", 200, {}> | Resp<Pet, \"application/xml\", 200, {}> | Reason<\"Pet not found\", 401, {}> | Reason<\"Validation expection\", 422, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Pet, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Pet, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Pet not found\", 401, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Validation expection\", 422, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "updatePetWithForm": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"POST\"",
+        "const": "POST",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/pet/:petId\"",
+        "const": "{{SERVER}}/pet/:petId",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ petId: number; }",
+        "type": "object",
+        "properties": {
+          "petId": {
+            "_code": "number",
+            "type": "number"
+          }
+        }
+      },
+      "query": {
+        "_code": "Pick<Pet, \"status\" | \"name\">",
+        "type": "object",
+        "properties": {
+          "status": {
+            "_code": "Status",
+            "oneOf": [
+              {
+                "_code": "\"placed\"",
+                "const": "placed",
+                "type": "string"
+              },
+              {
+                "_code": "\"approved\"",
+                "const": "approved",
+                "type": "string"
+              },
+              {
+                "_code": "\"delivered\"",
+                "const": "delivered",
+                "type": "string"
+              }
+            ]
+          },
+          "name": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Reason<\"Invalid ID supplied\", 400, {}>",
+        "type": "object",
+        "properties": {
+          "code": {
+            "_code": "number",
+            "type": "number"
+          },
+          "reason": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "updatePetImage": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"POST\"",
+        "const": "POST",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/pet/:petId/uploadImage\"",
+        "const": "{{SERVER}}/pet/:petId/uploadImage",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ petId: number; }",
+        "type": "object",
+        "properties": {
+          "petId": {
+            "_code": "number",
+            "type": "number"
+          }
+        }
+      },
+      "body": {
+        "description": "/**\n   *  requestBody:\n        content:\n          application/octet-stream:\n            schema:\n              type: string\n              format: binary\n   */",
+        "_code": "string",
+        "type": "string"
+      },
+      "query": {
+        "_code": "Record<string, string>",
+        "type": "object",
+        "properties": {}
+      },
+      "resp": {
+        "_code": "Resp<Pet, \"application/json\", 200, {}> | Reason<\"Pet not Found\", 404, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Pet, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Pet"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Pet not Found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "placeOrder": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"POST\"",
+        "const": "POST",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/store/order\"",
+        "const": "{{SERVER}}/store/order",
+        "type": "string"
+      },
+      "body": {
+        "$ref": "#Order"
+      },
+      "resp": {
+        "_code": "Resp<Order, \"application/json\", 200, {}> | Reason<\"Invalid input\", 400, {}> | Reason<\"Validation exception\", 422, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<Order, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Order"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Invalid input\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Validation exception\", 422, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "getOrderById": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/store/order/:orderId\"",
+        "const": "{{SERVER}}/store/order/:orderId",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ orderId: number; }",
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "_code": "number",
+            "type": "number"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Reason<\"Invalid ID supplied\", 400, {}> | Resp<Order, \"application/json\", 200, {}> | Resp<Order, \"application/xml\", 200, {}> | Reason<\"Order not found\", 404, {}>",
+        "oneOf": [
+          {
+            "_code": "Reason<\"Invalid ID supplied\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Order, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Order"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<Order, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#Order"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Order not found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "getInventory": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/store/inventory\"",
+        "const": "{{SERVER}}/store/inventory",
+        "type": "string"
+      },
+      "resp": {
+        "_code": "Record<Status, number>",
+        "type": "object",
+        "properties": {}
+      }
+    }
+  },
+  "deleteOrder": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"DELETE\"",
+        "const": "DELETE",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/store/order/:orderId\"",
+        "const": "{{SERVER}}/store/order/:orderId",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ orderId: number; }",
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "_code": "number",
+            "type": "number"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Reason<\"Invalid ID supplied\", 400, {}> | Reason<\"Order not found\", 404, {}>",
+        "oneOf": [
+          {
+            "_code": "Reason<\"Invalid ID supplied\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Order not found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "createUser": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"POST\"",
+        "const": "POST",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user\"",
+        "const": "{{SERVER}}/user",
+        "type": "string"
+      },
+      "body": {
+        "_code": "OmitAndRequired<User, \"id\", \"username\" | \"password\">",
+        "type": "array",
+        "allOf": [
+          {
+            "_code": "Omit<Partial<User>, \"id\">",
+            "type": "object",
+            "properties": {
+              "username": {
+                "_code": "string",
+                "type": "string"
+              },
+              "password": {
+                "_code": "string",
+                "type": "string"
+              },
+              "firstName": {
+                "_code": "string",
+                "type": "string"
+              },
+              "lastName": {
+                "_code": "string",
+                "type": "string"
+              },
+              "email": {
+                "_code": "string",
+                "type": "string"
+              },
+              "phone": {
+                "_code": "string",
+                "type": "string"
+              },
+              "userStatus": {
+                "_code": "number",
+                "type": "number"
+              }
+            }
+          },
+          {
+            "_code": "Pick<User, \"username\" | \"password\">",
+            "type": "object",
+            "properties": {
+              "username": {
+                "_code": "string",
+                "type": "string"
+              },
+              "password": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "resp": {
+        "_code": "Resp<User, \"application/json\", 200, {}> | Resp<User, \"application/xml\", 200, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<User, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#User"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<User, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#User"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "createUserList": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"POST\"",
+        "const": "POST",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user/createWithList\"",
+        "const": "{{SERVER}}/user/createWithList",
+        "type": "string"
+      },
+      "body": {
+        "_code": "OmitAndRequired<User, \"id\", \"username\" | \"password\">[]",
+        "type": "array",
+        "items": {
+          "_code": "OmitAndRequired<User, \"id\", \"username\" | \"password\">",
+          "type": "array",
+          "allOf": [
+            {
+              "_code": "Omit<Partial<User>, \"id\">",
+              "type": "object",
+              "properties": {
+                "username": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "password": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "firstName": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "lastName": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "email": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "phone": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "userStatus": {
+                  "_code": "number",
+                  "type": "number"
+                }
+              }
+            },
+            {
+              "_code": "Pick<User, \"username\" | \"password\">",
+              "type": "object",
+              "properties": {
+                "username": {
+                  "_code": "string",
+                  "type": "string"
+                },
+                "password": {
+                  "_code": "string",
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "resp": {
+        "_code": "Resp<User[], \"application/json\", 200, {}> | Resp<User[], \"application/xml\", 200, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<User[], \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "_code": "User[]",
+                "type": "array",
+                "items": {
+                  "$ref": "#User"
+                }
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<User[], \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "_code": "User[]",
+                "type": "array",
+                "items": {
+                  "$ref": "#User"
+                }
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "deleteUser": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"DELETE\"",
+        "const": "DELETE",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user/:username\"",
+        "const": "{{SERVER}}/user/:username",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ username: string; }",
+        "type": "object",
+        "properties": {
+          "username": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Reason<\"INvalid username supplied\", 400, {}> | Reason<\"User not found\", 404, {}>",
+        "oneOf": [
+          {
+            "_code": "Reason<\"INvalid username supplied\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"User not found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "getUserByName": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user/:username\"",
+        "const": "{{SERVER}}/user/:username",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ username: string; }",
+        "type": "object",
+        "properties": {
+          "username": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Resp<User, \"application/json\", 200, {}> | Resp<User, \"application/xml\", 200, {}> | Reason<\"INvalid username supplied\", 400, {}> | Reason<\"User not found\", 404, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<User, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#User"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<User, \"application/xml\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "$ref": "#User"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"INvalid username supplied\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"User not found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "userLogin": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user/login\"",
+        "const": "{{SERVER}}/user/login",
+        "type": "string"
+      },
+      "query": {
+        "_code": "Pick<User, \"username\" | \"password\">",
+        "type": "object",
+        "properties": {
+          "username": {
+            "_code": "string",
+            "type": "string"
+          },
+          "password": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Resp<string, \"application/json\", 200, { \"X-Rate-Limit\": string; \"X-Expires-After\": string; }> | Resp<string, \"application/xml\", 200, { \"X-Rate-Limit\": string; \"X-Expires-After\": string; }> | Reason<\"Invalid username/password supplied \", 400, {}>",
+        "oneOf": [
+          {
+            "_code": "Resp<string, \"application/json\", 200, { \"X-Rate-Limit\": string; \"X-Expires-After\": string; }>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "_code": "string",
+                "type": "string"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<string, \"application/xml\", 200, { \"X-Rate-Limit\": string; \"X-Expires-After\": string; }>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "_code": "string",
+                "type": "string"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"Invalid username/password supplied \", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "userLogout": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"GET\"",
+        "const": "GET",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user/logout\"",
+        "const": "{{SERVER}}/user/logout",
+        "type": "string"
+      },
+      "resp": {
+        "_code": "Resp<string, \"application/json\", 200, {}>",
+        "type": "object",
+        "properties": {
+          "code": {
+            "_code": "number",
+            "type": "number"
+          },
+          "data": {
+            "_code": "string",
+            "type": "string"
+          },
+          "message": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "updateUser": {
+    "type": "object",
+    "properties": {
+      "method": {
+        "_code": "\"PUT\"",
+        "const": "PUT",
+        "type": "string"
+      },
+      "url": {
+        "_code": "\"{{SERVER}}/user/:username\"",
+        "const": "{{SERVER}}/user/:username",
+        "type": "string"
+      },
+      "path": {
+        "_code": "{ username: string; }",
+        "type": "object",
+        "properties": {
+          "username": {
+            "_code": "string",
+            "type": "string"
+          }
+        }
+      },
+      "resp": {
+        "_code": "Reason<\"INvalid username supplied\", 400, {}> | Reason<\"User not found\", 404, {}> | Resp<string, \"application/json\", 200, {}>",
+        "oneOf": [
+          {
+            "_code": "Reason<\"INvalid username supplied\", 400, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Reason<\"User not found\", 404, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "reason": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "_code": "Resp<string, \"application/json\", 200, {}>",
+            "type": "object",
+            "properties": {
+              "code": {
+                "_code": "number",
+                "type": "number"
+              },
+              "data": {
+                "_code": "string",
+                "type": "string"
+              },
+              "message": {
+                "_code": "string",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tryCircleRef": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "_code": "\"TEST\"",
+        "const": "TEST",
+        "type": "string"
+      },
+      "body": {
+        "_code": "TreeLike<{ name: string; }>",
+        "type": "object",
+        "properties": {
+          "id": {
+            "_code": "number",
+            "type": "number"
+          },
+          "children": {
+            "_code": "TreeLike<{ name: string; }>[]",
+            "type": "array",
+            "items": {
+              "$ref": "TreeLike<{ name: string; }>"
+            }
+          }
+        }
+      }
+    }
+  }
+}

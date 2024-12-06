@@ -1,0 +1,201 @@
+{
+  "Order": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "_code": "number",
+        "type": "number"
+      },
+      "petId": {
+        "_code": "number",
+        "type": "number"
+      },
+      "quantity": {
+        "_code": "number",
+        "type": "number"
+      },
+      "shipDate": {
+        "_code": "string",
+        "type": "string"
+      },
+      "status": {
+        "_code": "Status",
+        "oneOf": [
+          {
+            "_code": "\"placed\"",
+            "const": "placed",
+            "type": "string"
+          },
+          {
+            "_code": "\"approved\"",
+            "const": "approved",
+            "type": "string"
+          },
+          {
+            "_code": "\"delivered\"",
+            "const": "delivered",
+            "type": "string"
+          }
+        ]
+      },
+      "complete": {
+        "_code": "boolean",
+        "type": "boolean"
+      }
+    }
+  },
+  "Customer": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "_code": "number",
+        "type": "number"
+      },
+      "username": {
+        "_code": "string",
+        "type": "string"
+      },
+      "address": {
+        "$ref": "#Address"
+      }
+    }
+  },
+  "Address": {
+    "type": "object",
+    "properties": {
+      "street": {
+        "_code": "string",
+        "type": "string"
+      },
+      "city": {
+        "_code": "string",
+        "type": "string"
+      },
+      "state": {
+        "_code": "string",
+        "type": "string"
+      },
+      "zip": {
+        "_code": "number",
+        "type": "number"
+      }
+    }
+  },
+  "Category": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "_code": "number",
+        "type": "number"
+      },
+      "name": {
+        "_code": "string",
+        "type": "string"
+      }
+    }
+  },
+  "User": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "_code": "number",
+        "type": "number"
+      },
+      "username": {
+        "_code": "string",
+        "type": "string"
+      },
+      "firstName": {
+        "_code": "string",
+        "type": "string"
+      },
+      "lastName": {
+        "_code": "string",
+        "type": "string"
+      },
+      "email": {
+        "_code": "string",
+        "type": "string"
+      },
+      "password": {
+        "_code": "string",
+        "type": "string"
+      },
+      "phone": {
+        "_code": "string",
+        "type": "string"
+      },
+      "userStatus": {
+        "_code": "number",
+        "type": "number"
+      }
+    }
+  },
+  "Tag": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "_code": "number",
+        "type": "number"
+      },
+      "name": {
+        "_code": "string",
+        "type": "string"
+      }
+    }
+  },
+  "Pet": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "/** Pet's id */",
+        "_code": "number",
+        "type": "number"
+      },
+      "category": {
+        "$ref": "#Category"
+      },
+      "name": {
+        "description": "// name with default",
+        "_code": "string",
+        "type": "string"
+      },
+      "photoUrls": {
+        "description": "/** photos */",
+        "_code": "string[]",
+        "type": "array",
+        "items": {
+          "_code": "string",
+          "type": "string"
+        }
+      },
+      "tags": {
+        "_code": "Tag[]",
+        "type": "array",
+        "items": {
+          "$ref": "#Tag"
+        }
+      },
+      "status": {
+        "_code": "Status",
+        "oneOf": [
+          {
+            "_code": "\"placed\"",
+            "const": "placed",
+            "type": "string"
+          },
+          {
+            "_code": "\"approved\"",
+            "const": "approved",
+            "type": "string"
+          },
+          {
+            "_code": "\"delivered\"",
+            "const": "delivered",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  }
+}
