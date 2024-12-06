@@ -1,16 +1,13 @@
-import { defineConfigWithTheme } from "vitepress";
-import type { ThemeConfig } from "vitepress-carbon";
-import baseConfig from "vitepress-carbon/config";
+import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
-export default defineConfigWithTheme<ThemeConfig>({
-  extends: baseConfig,
+export default defineConfig({
   title: "tApi",
   // srcDir: "./docs",
   description: "Define APIs with the power of TypeScript",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [{ text: "Home", link: "/" }],
+    nav: [{ text: "RFC", link: "/rfc.html" }],
     socialLinks: [{ icon: "github", link: "https://github.com/charlzyx/tapi" }],
   },
 });
