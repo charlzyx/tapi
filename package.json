@@ -4,9 +4,6 @@
   "bugs": {
     "url": "https://github.com/charlzyx/tapi/issues"
   },
-  "dependencies": {
-    "monaco-editor": "^0.52.0"
-  },
   "description": "Api TypeScript Description.",
   "devDependencies": {
     "@types/node": "^20",
@@ -30,5 +27,8 @@
   "version": "1.0.0",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.4"
+  }
 }

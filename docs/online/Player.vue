@@ -20,11 +20,19 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, defineAsyncComponent, onUnmounted, ref } from "vue";
+import { inBrowser } from "vitepress";
+
+const MonacoEditorLoader = inBrowser
+  ? defineAsyncComponent(() => import("./monaco"))
+  : () => null;
+const MonacoEditor = inBrowser
+  ? defineAsyncComponent(() => import("@guolao/vue-monaco-editor"))
+  : () => null;
+
 import { WebContainer } from "@webcontainer/api";
 import { files } from "./files";
 import { installDependencies, startDevServer } from "./vhost";
-import MonacoEditor from "./Monaco.vue";
 
 const input = ref(files["input.ts"].file.contents);
 const editor = ref(null);
