@@ -1,5 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "noEmit": false, // 如果之前设置了 `noEmit: true`，需要改为 `false` 来生成输出
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "esModuleInterop": false
   },
 }

@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "express": "latest",
+    "nodemon": "latest",
+    "ts-morph": "latest",
+    "typescript": "latest"
+  },
+  "name": "example-app",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "type": "module"
+}

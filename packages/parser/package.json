@@ -1,11 +1,13 @@
 {
   "dependencies": {
     "@hyperjump/json-schema": "^1.9.9",
-    "@types/node": "^20",
-    "ts-morph": "^24.0.0",
-    "typescript": "^5.6.3"
+    "rollup": "^4.28.1",
+    "ts-morph": "^24.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.1"
+  },
   "name": "@tapi/parser",
+  "type": "module",
   "version": "1.0.0"
 }

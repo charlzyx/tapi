@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@tapi/parser": "workspace:*",
+    "minimist": "^1.2.8"
+  },
+  "devDependencies": {},
+  "name": "@tapi/cli",
+  "version": "1.0.0"
+}

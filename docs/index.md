@@ -13,7 +13,9 @@ hero:
     - theme: brand
       text: tApi 规范
       link: /rfc
-
+    - theme: alt
+      text: 在线尝试
+      link: /playground
 features:
   - title: TypeScript 语法定义 API
     details: 用 class 定义数据模型，用 type 定义 API 操作。利用 TypeScript 类型系统提供完整的类型检查和推导能力。

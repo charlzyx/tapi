@@ -5,8 +5,8 @@
     "url": "https://github.com/charlzyx/tapi/issues"
   },
   "dependencies": {
-    "ts-morph": "^24.0.0",
-    "typescript": "^5.6.3"
+    "@webcontainer/api": "^1.5.1-internal.2",
+    "rollup": "^4.28.1"
   },
   "description": "Api TypeScript Description.",
   "devDependencies": {
@@ -24,6 +24,7 @@
   "scripts": {
     "docs:build": "vitepress build docs",
     "docs:dev": "vitepress dev docs",
+    "online:build": "bun build.online.js",
     "docs:preview": "vitepress preview docs"
   },
   "version": "1.0.0",
