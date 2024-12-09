@@ -5,12 +5,12 @@
     "url": "https://github.com/charlzyx/tapi/issues"
   },
   "dependencies": {
-    "@webcontainer/api": "^1.5.1-internal.2",
-    "rollup": "^4.28.1"
+    "monaco-editor": "^0.52.0"
   },
   "description": "Api TypeScript Description.",
   "devDependencies": {
     "@types/node": "^20",
+    "@webcontainer/api": "^1.5.1-internal.2",
     "vitepress": "^1.5.0"
   },
   "homepage": "https://github.com/charlzyx/tapi#readme",

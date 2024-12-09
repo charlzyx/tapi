@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import { defineConfig as defineViteConfig } from "vite";
 
 // https://github.com/vuejs/vitepress/issues/2195
 function crossOriginIsolationPlugin() {
@@ -24,18 +25,19 @@ export default defineConfig({
     socialLinks: [{ icon: "github", link: "https://github.com/charlzyx/tapi" }],
   },
   vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          // 确保 monaco-editor 的资源被正确打包
+          manualChunks: {
+            monaco: ["monaco-editor"],
+          },
+        },
+      },
+    },
+    optimizeDeps: {
+      include: ["monaco-editor"],
+    },
     plugins: [crossOriginIsolationPlugin()],
-    // plugins: [
-    //   {
-    //     configureServer(server) {
-
-    //     },
-    //   },
-    // server.middlewares.use((_req, res, next) => {
-    //   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-    //   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-    //   next();
-    // });
-    // ],
   },
 });

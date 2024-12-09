@@ -1,4 +1,6 @@
-# this is compoents
+---
+layout: page
+---
 
 <script setup>
 import Player from './online/Player.vue'

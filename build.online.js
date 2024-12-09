@@ -36,9 +36,7 @@ function generateFileTree(dirPath) {
 const targetDirectory = "./docs/online/srv"; // 替换为你的目标目录路径
 const fileTree = generateFileTree(targetDirectory);
 
-console.log("/** @satisfies {import('@webcontainer/api').FileSystemTree} */");
 const files = "export const files = " + JSON.stringify(fileTree, null, 2);
-console.log("fiels", files);
 
 fs.writeFileSync("./docs/online/files.ts", "", "utf-8");
 fs.writeFileSync("./docs/online/files.ts", files, "utf-8");

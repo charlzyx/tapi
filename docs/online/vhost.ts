@@ -10,7 +10,7 @@ export async function startDevServer(
 
   vhost.on("server-ready", (port, url) => {
     output.src = url;
-    onReady({ url, port });
+    onReady?.({ url, port });
   });
   vhost.on("error", (err) => {
     console.log("STATRT ERR", err);
