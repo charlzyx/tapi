@@ -1,5 +1,7 @@
 # What's tApi?
 
+@see [TSAid](https://github.com/charlzyx/tsaid)
+
 > **!! Work in Progress**
 
 **tApi** 是一个优雅的 API 类型描述规范，借助 TypeScript 强大的类型系统，让 API 定义更自然、更具表现力。完全兼容 OpenAPI 3.0 规范，无缝对接现有工具生态。
