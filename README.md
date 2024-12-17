@@ -1,6 +1,6 @@
 # What's tApi?
 
-@see [TSAid](https://github.com/charlzyx/tsaid)
+# MOVETO [typeto](https://github.com/charlzyx/typeto)
 
 > **!! Work in Progress**
 
